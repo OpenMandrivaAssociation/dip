@@ -21,7 +21,6 @@ Patch10:	dip-3.3.7o-gcc-3.3.patch
 Patch11:	dip-3.3.7o-amd64.patch
 Patch12:	dip-3.3.7o-gcc3.4-fix.patch
 BuildRequires:	X11-devel db-devel gccmakedep
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Dip is a modem dialer.  Dip handles the connections needed for dialup IP links
