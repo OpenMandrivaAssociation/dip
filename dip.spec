@@ -62,7 +62,7 @@ mkdir -p %{buildroot}%{_mandir}/man8
 install -c -s dip %{buildroot}%{_sbindir}
 ln -sf dip %{buildroot}%{_sbindir}/diplogini
 install -c -m 0444 dip.8 %{buildroot}%{_mandir}/man8
-ln -sf dip.8.bz2 %{buildroot}%{_mandir}/man8/diplogin.8.bz2
+ln -sf dip.8%{_extension} %{buildroot}%{_mandir}/man8/diplogin.8%{_extension}
 
 %clean
 rm -rf %{buildroot}
@@ -73,5 +73,3 @@ rm -rf %{buildroot}
 %{_sbindir}/diplogini
 %{_mandir}/man8/dip.8*
 %{_mandir}/man8/diplogin.8*
-
-
