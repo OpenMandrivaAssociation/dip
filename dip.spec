@@ -1,7 +1,7 @@
 Summary:	Handles the connections needed for dialup IP links
 Name:		dip
 Version:	3.3.7o
-Release:	%mkrel 28
+Release:	%mkrel 29
 License:	GPL
 Group:		Communications
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/serial
@@ -22,6 +22,7 @@ Patch11:	dip-3.3.7o-amd64.patch
 Patch12:	dip-3.3.7o-gcc3.4-fix.patch
 BuildRequires:	X11-devel db-devel gccmakedep
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Requires:	setup >= 2.7.16
 
 %description
 Dip is a modem dialer.  Dip handles the connections needed for dialup IP links
@@ -69,7 +70,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%attr(0755,root,uucp) %{_sbindir}/dip
+%attr(0755,root,dialout) %{_sbindir}/dip
 %{_sbindir}/diplogini
 %{_mandir}/man8/dip.8*
 %{_mandir}/man8/diplogin.8*
