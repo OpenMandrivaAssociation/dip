@@ -1,7 +1,7 @@
 Summary:	Handles the connections needed for dialup IP links
 Name:		dip
 Version:	3.3.7o
-Release:	%mkrel 30
+Release:	%mkrel 31
 License:	GPL
 Group:		Communications
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/serial
@@ -22,6 +22,7 @@ Patch11:	dip-3.3.7o-amd64.patch
 Patch12:	dip-3.3.7o-gcc3.4-fix.patch
 BuildRequires:	X11-devel db-devel gccmakedep
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+ExcludeArch:	%mips
 Requires:	setup >= 2.7.16
 
 %description
