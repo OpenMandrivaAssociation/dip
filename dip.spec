@@ -20,7 +20,8 @@ Patch9:		dip-3.3.7o-ppc.patch
 Patch10:	dip-3.3.7o-gcc-3.3.patch
 Patch11:	dip-3.3.7o-amd64.patch
 Patch12:	dip-3.3.7o-gcc3.4-fix.patch
-BuildRequires:	X11-devel db-devel gccmakedep
+BuildRequires:	gccmakedep
+BuildRequires:	db4-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExcludeArch:	%mips
 Requires:	setup >= 2.7.16
