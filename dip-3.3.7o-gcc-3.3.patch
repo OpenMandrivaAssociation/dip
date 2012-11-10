@@ -1,0 +1,91 @@
+--- dip-3.3.7o/command.c.orig	2003-07-15 20:57:50.000000000 +0200
++++ dip-3.3.7o/command.c	2003-07-15 20:57:42.000000000 +0200
+@@ -406,7 +406,7 @@ do_echo(int argc, char *argv[])
+ 	return(-1);
+   }
+ 	
+-  if (opt_v == 1) printf("Display modem output: %sabled\n",
++  if (opt_v == 1) printf("Display modem output: %sabled\n",\
+ 				(var_echo == 0) ? "dis" : "en");
+   return(0);
+ }
+@@ -2363,7 +2363,7 @@ static __inline__ unsigned short ip_fast
+ 	unsigned long tmp1, tmp2, tmp3, tmp4;
+ 	unsigned short sum;
+ 
+-	__asm__ __volatile__("
++	__asm__ __volatile__(""
+ 		andcc	%1, 3, %%g0
+ 		be,a	7f		! 4 byte aligned
+ 		 sub	%2, 4, %2
+@@ -2459,7 +2459,7 @@ static __inline__ unsigned short ip_fast
+ 		addx	%0, %%g0, %0
+ 	10:
+ 		xnor	%%g0, %0, %0
+-	" : "=r" (sum), "=&r" (iph), "=&r" (ihl),
++	"" : "=r" (sum), "=&r" (iph), "=&r" (ihl),
+ 	    "=r" (tmp1), "=r" (tmp2), "=r" (tmp3), "=r" (tmp4)
+ 	  : "1" (iph), "2" (ihl));
+ 
+@@ -2476,7 +2476,7 @@ static __inline__ unsigned short csum_tc
+ 						   unsigned short proto,
+ 						   unsigned int sum)
+ {
+-	__asm__ __volatile__("
++	__asm__ __volatile__(""
+ 		addcc	%1, %0, %0
+ 		addxcc	%2, %0, %0
+ 		addxcc	%3, %0, %0
+@@ -2486,7 +2486,7 @@ static __inline__ unsigned short csum_tc
+ 		srl	%0, 16, %0
+ 		addx	%0, %%g0, %0
+ 		xnor	%%g0, %0, %0
+-	" : "=r" (sum), "=r" (saddr)
++	"" : "=r" (sum), "=r" (saddr)
+ 	  : "r" (daddr), "r" ((proto<<16)+len), "0" (sum), "1" (saddr));
+ 
+ 	return sum;
+@@ -2600,7 +2600,7 @@ ip_fast_csum(unsigned char * iph, unsign
+ {
+ 	unsigned int sum, tmp1;
+ 
+-    __asm__ __volatile__("
++    __asm__ __volatile__(""
+ 	sub	%2, %2, #5
+ 	ldr	%0, [%1], #4
+ 	ldr	%3, [%1], #4
+@@ -2619,7 +2619,7 @@ ip_fast_csum(unsigned char * iph, unsign
+ 	addcs	%0, %0, #0x10000
+ 	mvn	%0, %0
+ 	mov	%0, %0, lsr #16
+-	"
++	""
+ 	: "=&r" (sum), "=&r" (iph), "=&r" (ihl), "=&r" (tmp1)
+ 	: "1" (iph), "2" (ihl));
+ 	return(sum);
+@@ -2631,9 +2631,9 @@ ip_fast_csum(unsigned char * iph, unsign
+ static inline unsigned int
+ csum_fold(unsigned int sum)
+ {
+-	__asm__("
++	__asm__(""
+ 	adds	%0, %0, %0, lsl #16
+-	addcs	%0, %0, #0x10000"
++	addcs	%0, %0, #0x10000""
+ 	: "=r" (sum)
+ 	: "0" (sum));
+ 	return (~sum) >> 16;
+@@ -2643,11 +2643,11 @@ static inline unsigned long
+ csum_tcpudp_nofold(unsigned long saddr, unsigned long daddr, unsigned short len,
+ 		   unsigned short proto, unsigned int sum)
+ {
+-	__asm__("
++	__asm__(""
+ 	adds	%0, %0, %1
+ 	adcs	%0, %0, %2
+ 	adcs	%0, %0, %3
+-	adc	%0, %0, #0"
++	adc	%0, %0, #0""
+ 	: "=&r"(sum)
+ 	: "r" (daddr), "r" (saddr), "r" ((ntohs(len)<<16)+proto*256), "0" (sum));
+ 	return sum;

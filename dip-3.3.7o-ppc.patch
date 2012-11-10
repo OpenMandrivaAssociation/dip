@@ -1,0 +1,135 @@
+--- dip-3.3.7o/command.c.ppc	2004-07-09 20:13:03.232570358 +0200
++++ dip-3.3.7o/command.c	2004-07-09 20:13:03.297570846 +0200
+@@ -2499,7 +2499,131 @@
+ 	return(csum_tcpudp_magic(saddr, daddr, len, IPPROTO_UDP, 0));
+ }
+ 
+-#elif defined(__i386__) /* !__alpha__ && !__sparc__ */
++#elif defined(__powerpc__)
++
++/*
++ * Compute IP checksums
++ *   _ip_fast_csum(buf, len) -- Optimized for IP header
++ *   _ip_compute_csum(buf, len)
++ */
++__asm__ (
++"        .text\n"
++"        .globl _ip_fast_csum\n"
++"_ip_fast_csum:\n"
++"	li	%r0,0\n"
++"	addic	%r0,%r0,0\n"		/* Clear initial carry */
++"	lwz	%r4,0(%r3)\n"
++"	lwz	%r5,4(%r3)\n"
++"	adde	%r0,%r0,%r4\n"
++"	lwz	%r4,8(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	lwz	%r5,12(%r3)\n"
++"	adde	%r0,%r0,%r4\n"
++"	lwz	%r4,16(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	adde	%r0,%r0,%r4\n"
++"	mr	%r3,%r0\n"
++"	andi.	%r3,%r3,0xFFFF\n"
++"	srwi	%r0,%r0,16\n"
++"	adde	%r3,%r3,%r0\n"
++"	andis.	%r0,%r3,1\n"
++"	beq	10f\n"
++"	addi	%r3,%r3,1\n"
++"10:	not	%r3,%r3\n"
++"	andi.	%r3,%r3,0xFFFF\n"
++"	blr\n"
++"\n"
++"        .globl  _ip_compute_csum\n"
++"_ip_compute_csum:\n"
++"	li	%r0,0\n"
++"	addic	%r0,%r0,0\n"
++"finish_ip_csum:	\n"
++"	subi	%r3,%r3,4\n"
++"	andi.	%r5,%r3,2\n"		/* Align buffer to longword boundary */
++"	beq	10f\n"
++"	lhz	%r5,4(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	addi	%r3,%r3,2\n"
++"	subi	%r4,%r4,2\n"
++"10:	cmpi	0,%r4,16\n"		/* unrolled loop - 16 bytes at a time */
++"	blt	20f\n"
++"	lwz	%r5,4(%r3)\n"
++"	lwz	%r6,8(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	lwz	%r5,12(%r3)\n"
++"	adde	%r0,%r0,%r6\n"
++"	lwzu	%r6,16(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	adde	%r0,%r0,%r6\n"
++"	subi	%r4,%r4,16\n"
++"	b	10b\n"
++"20:	cmpi	0,%r4,4\n"
++"	blt	30f\n"
++"	lwzu	%r5,4(%r3)\n"
++"	adde	%r0,%r0,%r5\n"
++"	subi	%r4,%r4,4\n"
++"	b	20b\n"
++"30:	cmpi	0,%r4,2\n"
++"	blt	40f\n"
++"	lhz	%r5,4(%r3)\n"
++"	addi	%r3,%r3,2\n"
++"	adde	%r0,%r0,%r5\n"
++"	subi	%r4,%r4,2\n"
++"40:	cmpi	0,%r4,1\n"
++"	bne	50f\n"
++"	lbz	%r5,4(%r3)\n"
++"	slwi	%r5,%r5,8\n"		/* Upper byte of word */
++"	adde	%r0,%r0,%r5\n"
++"50:	mr	%r3,%r0\n"
++"	andi.	%r3,%r3,0xFFFF\n"
++"	srwi	%r0,%r0,16\n"
++"	adde	%r3,%r3,%r0\n"
++"	andis.	%r0,%r3,1\n"
++"	beq	60f\n"
++"	addi	%r3,%r3,1\n"
++"60:	not	%r3,%r3\n"
++"	andi.	%r3,%r3,0xFFFF\n"
++"	blr\n"
++"\n"
++"        .globl  _udp_check\n"
++"_udp_check:\n"
++"	addc	%r0,%r5,%r6\n"	/* Add in header fields */
++"	adde	%r0,%r0,%r7\n"
++"	b	finish_ip_csum	\n"
++);
++
++extern unsigned short _ip_fast_csum(unsigned char *buf);
++
++unsigned short
++ip_fast_csum(unsigned char *buf, unsigned int len)
++{
++	unsigned short _val;
++	_val = _ip_fast_csum(buf);
++#if 0
++	printk("IP CKSUM(%x, %d) = %x\n", buf, len, _val);
++	dump_buf(buf, len*4);
++#endif	
++	return (_val);
++}
++
++unsigned short
++_udp_check(unsigned char *buf, int len, int saddr, int daddr, int hdr);
++
++unsigned short
++udp_check(unsigned char *buf, int len, int saddr, int daddr)
++{
++	unsigned short _val;
++	int hdr;
++	hdr = (len << 16) + IPPROTO_UDP;
++	_val = _udp_check(buf, len, saddr, daddr, hdr);
++#if 0
++	printk("UDP CSUM(%x,%d,%x,%x) = %x\n", buf, len, saddr, daddr, _val);
++	dump_buf(buf, len);
++#endif	
++	return (_val);
++}
++
++#elif defined(__i386__) /* !__alpha__ && !__sparc__ && !__powerpc__ */
+ 
+ /* This is a version of ip_compute_csum() optimized for IP headers, which
+    always checksum on 4 octet boundaries. */

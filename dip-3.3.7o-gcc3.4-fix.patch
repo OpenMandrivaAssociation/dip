@@ -1,0 +1,25 @@
+--- dip-3.3.7o/command.c~	2004-06-13 21:17:36.536633575 +0200
++++ dip-3.3.7o/command.c	2004-06-13 21:18:13.404410751 +0200
+@@ -2852,6 +2852,7 @@ static void get_buf(void)
+ 	case ESC_ESC: c = ESC; break;
+ 	case ESC_END: c = END; break;
+ 	default: /* bad escape */
++		      break;
+ 	}
+       }
+       else if (c == END)
+--- dip-3.3.7o/skey/skeyinit.c~	2004-06-13 21:20:07.478821809 +0200
++++ dip-3.3.7o/skey/skeyinit.c	2004-06-13 21:21:12.394201291 +0200
+@@ -31,7 +31,11 @@
+ extern int optind;
+ extern char *optarg;
+ 
+-char *readpass (), *malloc (), *getpass (), *crypt ();
++/* fix gcc-3.4 build
++ * char *readpass (), *malloc (), *getpass (), *crypt ();*
++ */
++char *readpass (), *getpass (), *crypt ();
++
+ 
+ int skeylookup __ARGS ((struct skey * mp, char *name));
+ 
