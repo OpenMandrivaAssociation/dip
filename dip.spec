@@ -1,7 +1,7 @@
 Summary:	Handles the connections needed for dialup IP links
 Name:		dip
 Version:	3.3.7o
-Release:	%mkrel 35
+Release:	%mkrel 36
 License:	GPL
 Group:		Communications
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/serial
@@ -75,3 +75,75 @@ rm -rf %{buildroot}
 %{_sbindir}/diplogini
 %{_mandir}/man8/dip.8*
 %{_mandir}/man8/diplogin.8*
+
+
+%changelog
+* Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-35mdv2011.0
++ Revision: 663778
+- mass rebuild
+
+* Wed Feb 02 2011 Funda Wang <fwang@mandriva.org> 3.3.7o-34
++ Revision: 635161
+-ldb is not needed
+- tighten BR
+
+* Thu Dec 02 2010 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-33mdv2011.0
++ Revision: 604790
+- rebuild
+
+* Tue Mar 16 2010 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-32mdv2010.1
++ Revision: 522453
+- rebuilt for 2010.1
+
+* Fri Sep 25 2009 Olivier Blin <oblin@mandriva.com> 3.3.7o-31mdv2010.0
++ Revision: 448875
+- disable build on mips (from Arnaud Patard)
+
+* Sun Aug 09 2009 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-30mdv2010.0
++ Revision: 413356
+- rebuild
+
+* Fri Jan 09 2009 Frederic Crozat <fcrozat@mandriva.com> 3.3.7o-29mdv2009.1
++ Revision: 327461
+- Use dialout group, not uucp
+
+* Mon Jun 16 2008 Thierry Vignaud <tv@mandriva.org> 3.3.7o-28mdv2009.0
++ Revision: 220626
+- rebuild
+
+* Wed Mar 05 2008 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-27mdv2008.1
++ Revision: 179960
+- fix build
+- rebuild
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - rebuild
+    - kill re-definition of %%buildroot on Pixel's request
+    - buildrequires X11-devel instead of XFree86-devel
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+
+* Sun Mar 18 2007 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-25mdv2007.1
++ Revision: 145877
+- fix dep (gccmakedep)
+- Import dip
+
+* Sun Mar 18 2007 Oden Eriksson <oeriksson@mandriva.com> 3.3.7o-25mdv2007.1
+- use the %%mrel macro
+- bunzip patches
+
+* Sat Dec 31 2005 Mandriva Linux Team <http://www.mandrivaexpert.com/> 3.3.7o-24mdk
+- Rebuild
+
+* Sat Jul 10 2004 Christiaan Welvaart <cjw@daneel.dyndns.org> 3.3.7o-23mdk
+- fix Patch9 for gcc 3.3+
+
+* Sun Jun 20 2004 Christiaan Welvaart <cjw@daneel.dyndns.org> 3.3.7o-22mdk
+- add BuildRequires: db-devel
+
+* Mon Jun 14 2004 Per Øyvind Karlsen <peroyvind@linux-mandrake.com> 3.3.7o-21mdk
+- fix gcc-3.4 build (P12)
+- don't do stuff within parantheses
+
