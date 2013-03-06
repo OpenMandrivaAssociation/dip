@@ -1,3 +1,5 @@
+%define debug_package %{nil}
+
 Summary:	Handles the connections needed for dialup IP links
 Name:		dip
 Version:	3.3.7o
