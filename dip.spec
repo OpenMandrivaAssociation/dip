@@ -3,7 +3,7 @@
 Summary:	Handles the connections needed for dialup IP links
 Name:		dip
 Version:	3.3.7o
-Release:	37
+Release:	38
 License:	GPLv2
 Group:		Communications
 Url:		ftp://sunsite.unc.edu/pub/Linux/system/network/serial
